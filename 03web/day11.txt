@@ -1,0 +1,92 @@
+一、jquery使用
+	1.获取元素
+	2.操作元素内容
+	3.操作元素的属性
+		1）attr("attrName","value")
+			设置或读取元素属性
+		2）prop("attrName","value")
+			设置或读取元素属性,如果操作用于标记元素状态的属性（例如：checked属性）只能使用prop()方法
+		3）removeAttr("attrName")
+			移除指定的标签属性
+	4.操作元素样式
+		1）为元素添加id或class属性，对应选择器的样式
+		2）针对class属性可以取多个值的情况，提供专门操作类名的方法
+			addClass("className")添加指定类名
+			removeClass("className")移除指定类名
+			toggleClass("className")借助用户行为动态修改类名，有则删除，无则添加
+		3）操作行内样式
+			1.css("attrName","value")
+			2.css(JSON对象)
+				格式：
+					{
+						"width":"200px",
+						"height":"200px"
+					}
+	5.根据层次结构获取元素
+		1）获取父元素
+			parent()
+		2）获取祖先元素/满足选择器的祖先元素
+			parents()/parents("selector")
+		3）获取直接子元素列表/满足选择器的子元素列表
+			children()/children("selector")
+		4）获取指定的后代元素
+			find("selector")
+		5）获取下一个兄弟元素/获取下一个兄弟，必须满足选择器，否则查找失败
+			next()/next("selector")
+		6）获取上一个兄弟元素
+			prev()/prev("selector")
+		7）获取所有的兄弟元素/获取所有满足选择器的兄弟元素
+			siblings()/siblings("selector")
+	6.元素的创建，添加和移除
+		1）创建元素
+			$("<h1 id='d1'>老王</h1>")
+		2）添加元素
+			1.作为子元素添加
+				//将新创建的元素添加至父元素的末尾
+				$parent.append(elem);
+				//将新创建的元素添加至父元素的开头
+				$parent.prepend(elem);
+			2.作为兄弟元素添加
+				//在obj之前添加新元素
+				$obj.before(elem)
+				//在obj只有添加新元素
+				$obj.after(elem)
+		3）移除元素
+			$obj.remove()
+	7.事件处理
+		1）窗口加载完毕
+			原生JS使用onload事件
+			jQuery使用ready()表示：
+				语法一：
+					$(document).ready(function (){
+						//文档加载完毕后执行
+					})
+				语法二：
+					$().ready(function (){})
+				语法三：
+					$(function (){
+						//文档加载完毕后执行
+					})
+			区别：
+				onload重复书写会造成覆盖问题，需要手动检测；ready方法可以重复输写，不需要考虑覆盖问题。
+		2）绑定方式
+			1.使用on()绑定
+				例：
+					$("h1").on("click",function (){});
+			2.使用bind()绑定
+				例：
+					$("h1").bind("click",function (){})
+			3.将省略"on"前缀的事件名称作为方法名直接绑定
+				例：
+					$("h1").click(function (){});
+		3）this关键字
+			直接使用this关键字，表示原生的对象，需要转换为jquery对象才能使用jquery方法
+		4）事件对象的获取和使用同原生JS
+				
+	
+				
+
+
+
+
+

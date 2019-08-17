@@ -1,0 +1,198 @@
+#vim test.sh
+---------------------------------------
+#!/bin/bash
+#多进程版本的ping
+myping(){
+   ping -c2 -i0.2 -W1 $1 &>/dev/null
+   if [ $? -eq 0 ];then
+	 echo "$1 is up."
+   else
+	 echo "$1 is down."
+   fi
+}
+for i in {1..254}
+do
+    myping 172.40.91.$i &
+done
+wait
+//等待所有后台子进程结束，主脚本才结束.
+--------------------------------------------
+
+正则表达式:(模糊匹配)
+使用一些特征来描述你的数据.
+网站日志:IP(哪个地区的用户)
+         PV(page view),UV(user view)
+	 热点数据...
+	(用户画像--->千人千面)
+
+基本正则:(单个字符为单位)
+   ^(开始) $(结尾) []集合 [^]集合取反
+   .(任意单个字符)
+   *(匹配任意次)
+   \{n,m\}  \{n\}   \{n,\}
+扩展正则:
+    {n,m}  {n,}  {n}
+    +(匹配至少1次)  
+    ?(匹配0或1次)
+    ()组合+保留
+Posix正则
+    [:alpha:] [:digit:] [:alnum:] [:punct:]
+    [:space:]... 
+perl正则
+    \d,\w,\s,\W
+
+++++++++++++++++++++++++++++++++++
+sed(非交互文本编辑器,逐行处理软件)
+语法格式:
+   sed [选项] '条件指令'  文件名
+指令:增、删、改、查
+条件:仅对特定的行执行指令
+
+# sed -n '3p'    /etc/passwd
+# sed -n '1,3p'  /etc/passwd
+# sed -n '1~2p'  /etc/passwd
+# sed -n '2~2p'  /etc/passwd
+# sed -n '3p;5p' /etc/passwd
+# sed -n '$p'    /etc/passwd
+
+
+#vim test.sh
+-----------------------------------------
+#!/bin/bash
+file=a.txt
+num=$(sed -n '$=' $file)
+#$(命令)提取命令的返回值
+
+while :
+do
+   clear
+   line=$[RANDOM%num+1]
+   sed -n "${line}p" $file
+   sleep 0.5
+done
+---------------------------------------
+
+语法格式:
+   sed [选项] '条件指令'  文件名
+指令:增、删、改、查
+条件:仅对特定的行执行指令
+
+1)选项:
+	-n(默认sed会自动输出所有行,-n屏蔽默认输出)
+	-r(默认sed不支持扩展正则,-r支持扩展正则)
+	-i(默认在内存中修改文件,将结果显示在屏幕)
+        使用-i选项则可以修改源文件(永久保存)
+
+2)条件:
+     使用行号做条件:3p; 3,5p; 1~2p
+     使用正则做条件:/正则/
+
+# sed -n '/root/p'  /etc/passwd
+//找包含root的行,并打印改行内容
+
+# sed -n '/bash$/p'  /etc/passwd
+//找包含bash结尾的行并打印
+
+# sed -rn '/ro{2}/p'  /etc/passwd
+//支持扩展正则,匹配roo并打印改行(默认不支持扩展正则)
+
+3)指令:
+	p(print)打印行
+	d(delete)删除行
+        c(change)替换行
+	s(substitution)替换关键词 s/旧/新/
+	a(append)追加
+	i(insert)插入	
+
+# sed  '3d'           文件名   
+//删除第三行   
+# sed  '3c xxx'       文件名
+//将第三行替换为xxx
+# sed  '/root/c xxx'  文件名
+//找到包含root的行，并替换为xxx
+# sed 's/localhost/123/'  /etc/hosts
+//把文件中第一个localhost替换为123
+
+# sed 's/2009/XXXX/g'   a.txt
+//把每一行的所有2009都替换为XXXX 
+
+# sed  's/2009//g'      a.txt
+//删除文件中所有的2009
+
+# sed  '2a XYZ'  /etc/hosts
+//在第二行后面添加一行XYZ
+
+# sed  '2i XYZ'  /etc/hosts
+//在第二行的前面添加一行XYZ
+
+# sed  '/root/a XYZ'  文件名
+# sed  '/root/i XYZ'  文件名
+
+
+awk(数据过滤,逐行处理)
+语法格式: awk  [选项]  '条件{指令}'  文件名
+          命令 | awk  [选项]  '条件{指令}'
+
+awk内置变量:$1,$2,$3(第一列,第二列,第三列...)
+
+# df -h | awk  '{print $4}'
+//把硬盘的剩余空间打印出来(逐行处理)
+
+# df -h | awk  '{print $1,$4}'
+//把所有磁盘的名称和剩余空间显示出来
+
+
+# free | awk  '{print $7}' 
+//显示剩余内存容量
+
+
+# free  | awk '/内存/{print $7}'
+//匹配包含有<内存>的行，然后打印该行的第7列
+
+
+# awk '/Failed password/{print $11}' auth.log
+
+awk有一个-F选项可以自定义分隔符
+(默认使用空格或tab为分隔符)
+
+# awk -F:  '{print $1}'  /etc/passwd
+
+
+awk的条件:
+    /正则/      对整行数据进行正则匹配
+    $1~/正则/   仅对第1列进行正则匹配
+    ==,!=,>,>=,<,<=  进行精确匹配    
+
+# awk -F: '$1~/root/'   /etc/passwd
+//在每行的第1列进行正则匹配,打印包含root的行
+
+# awk -F:  '$1~/m/'    /etc/passwd
+//把所有用户名中包含m的账户信息打印出来
+
+# awk -F:  '$1=="root"'  /etc/passwd
+//精确判断每行的第1列是root，则打印该行
+
+# awk -F:  '$3>=1000'  /etc/passwd
+//把所有UID大于等于1000的用户信息打印出来
+
+
+awk的语法格式:
+  awk [选项]  '条件{指令}  END{指令}'  文件名
+
+END{}中的指令,仅在所有文件内容读取完成后执行1次.
+
+利用awk也可以做统计工作:
+# awk  -F:  '$3>=1000{x++}'              /etc/passwd
+# awk  -F:  '$3>=1000{x++} END{print x}' /etc/passwd
+
+//在Linux中大于等于1000的用户为普通用户
+//小于1000的用户是系统用户
+
+# awk '$7~/mp3$/{x++} END{print x}' access_log
+//统计日志文件中mp3的访问次数
+
+
+# awk '$7~/mp3$/{x++} END{print "mp3的访问量:",x}' access_log
+//统计mp3文件的访问次数.
+
+

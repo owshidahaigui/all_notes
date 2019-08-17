@@ -1,0 +1,328 @@
+
+Shell与Python区别:
+Python是调用模块\通用设计语言
+Shell是调用命令\Linux系统自动化
+
+1.Shell格式
+   扩展名一般是.sh
+   正文的第一行必须是解释器#!/bin/bash
+   #注释
+   调用命令的代码
+
+2.执行shell脚本的格式
+  1)加权限,相对路径或绝对路径执行
+  2)没有权限,bash 脚本名称
+  3)source 脚本名   [不启动子进程]
+  
+  正常执行脚本
+   bash----->test.sh(命令exit)
+  不启动子进程
+   bash(命令exit)
+
+3.变量
+  自定义变量、预设变量
+  自定义变量格式：
+    变量名=值   （不能有空格）
+    Shell的变量属于弱类型
+    变量名：字母、数字、下划线，不能数字开始
+  调用变量的格式：
+    echo $变量名
+    #price=12
+    #echo $priceRMB
+    #echo ${price}RMB
+  预设变量:
+    echo $USER $UID $PWD $PATH
+    PATH变量存储的是命令搜索路径 
+    $$当前进程的进程号
+    $!前一个后台进程的进程号
+        #sleep 100 &
+        #echo $!
+    $1,$2,$3...脚本的位置变量
+    #vim test.sh
+    #!/bin/bash
+    echo $1
+    echo $2
+    echo $#
+    echo $*
+    #chmod +x test.sh
+    #./test.sh a 11 c op
+    $1脚本的第一个参数
+    $2脚本的第二个参数...
+    $#所有参数的个数
+    $*所有的参数的值
+    $?返回上一条命令执行的状态(0代表正确,非0代表失败)
+
+    #vim test.sh
+    #!/bin/bash
+    touch $1/$2
+    
+    #chmod +x test.sh
+    #./test.sh  /tmp   myfile
+
+      
+read命令读取用户的输入:
+    # read 变量名
+    >等待用户输入
+    # read -p 提示信息:  变量名
+    # read -t 2 -p 提示  变量名
+       限制2秒钟必须输入值
+   
+#vim test.sh
+#!/bin/bash
+read -p 请输入用户名:  username
+read -p 请输入密码:    passwd
+useradd $username
+echo "$username:$passwd" | chpasswd
+
+
+________________________________________
+判断[数字、字符、文件或目录...]
+   判断的语法格式:
+   [  判断语句  ]      //注意括号必须有空格
+   
+   && 并且
+   || 或者
+
+   A命令  &&  B命令   //仅当A成功时才执行B
+   A命令  ||  B命令   //仅当A失败时才执行B
+
+   # [ a == a ] && echo Y || echo N
+   //==两边必须有空格
+   # [ a == b ] && echo Y || echo N
+   
+
+  1)字符判断
+     [ A == A ]    #相等(等号两边需要有空格)
+     [ A != B ]    #不相等
+     [ -z $变量 ]  #判断是否为空zero 
+   # [ a == a ] && echo Y || echo N
+   # [ a != a ] && echo Y || echo N
+   # [ -z $angle ] && echo Y || echo N
+   # [ $USER == root ] && echo Y || echo N
+
+#vim test.sh
+---------------------------------------------
+#!/bin/bash
+read -p "请输入用户名:" username
+[ -z $username ] && exit
+read -p "请输入密码:"   passwd
+[ -z $passwd ] && exit
+
+useradd $username 
+echo "$username:$passwd" | chpasswd
+----------------------------------------------
+
+   2)数字比较(man test)
+	-eq	等于(equal)
+	-ne	不等于(not equal)
+	-gt	大于(greater than)
+	-ge	大于等于(great or equal)
+	-lt	小于(less than)
+	-le	小于等于(less or equal)
+   # [ 3 -eq 3 ] && echo Y || echo N
+   # [ 4 -le 3 ] && echo Y || echo N
+   # [ 5 -ge 3 ] && echo Y || echo N
+
+   3)文件或目录
+       [ -e 文件或目录 ]    #是否存在exist
+       [ -f  文件      ]    #存在且为文件file
+       [ -d  目录      ]    #存在且为目录directory
+       [ -r 文件或目录 ]    #判断是否可读read
+       [ -w 文件或目录 ]    #判断是否可写write
+       [ -x 文件或目录 ]    #判断是否可执行
+
+    # [ -e /etc/passwd ] && echo Y || echo N 
+    # [ -f /etc/passwd ] && echo Y || echo N
+    # [ -d /etc/passwd ] && echo Y || echo N
+
+
+if语句语法格式:
+   1)单分支
+     if 判断 ;then
+        命令
+        命令
+     fi
+   2)双分支
+     if 判断 ;then
+	命令1
+     else
+        命令2
+     fi
+   3)多分支
+     if 判断;then
+        命令1
+     elif 判断 ;then
+        命令2
+     else
+        命令3
+     fi
+
+#vim test.sh
+---------------------------------------------
+#!/bin/bash
+if [ $USER == tarena ];then
+	echo "Yes,You are Tarena."
+else
+	echo "Oops,You are other man."
+fi
+---------------------------------------------
+
+#vim test.sh
+---------------------------------------------
+#!/bin/bash
+num=$RANDOM
+read -p "我有一个随机数,你猜:"  guess
+if [ $guess -eq $num ];then
+	echo "恭喜,猜对了."
+	exit
+elif [ $guess -gt $num ];then
+	echo "你猜大了"
+else
+	echo "你猜小了"
+fi
+-----------------------------------------------
+
+如何进行数字运算:
+  1) echo $[数字+数字]      #+ - * / %
+  
+  2) let 变量=数字+数字     #++ --  += -= *= /= 
+     
+    # echo $[2+3]
+    # echo $[2*3]
+    # echo $[10-3]
+    # let x=2*8
+    # echo $x
+
+
+如何进行循环操作:for,while
+
+for的语法格式:
+  for 变量 in 值序列
+  do
+     命令
+  done
+
+  for i in 1 2 3 4 5
+  do
+      echo "凤姐"
+  done
+  
+#vim test.sh
+------------------------------------------
+#!/bin/bash
+
+num=$[RANDOM%100]
+
+for i in {1..100}
+do
+read -p "我有一个随机数,你猜:"  guess
+if [ $guess -eq $num ];then
+	echo "恭喜,猜对了."
+	exit
+elif [ $guess -gt $num ];then
+	echo "你猜大了"
+else
+	echo "你猜小了"
+fi
+done
+---------------------------------------------
+
+
+while循环语法格式:
+   while 判断            #判断为真则执行命令
+   do
+      命令
+   done
+
+#vim test.sh
+---------------------------------
+#!/bin/bash
+i=1
+while [ $i -lt 5 ]
+do
+   echo baby
+   let i++
+done
+--------------------------------
+
+vim test.sh
+#!/bin/bash
+while :
+do
+   echo baby
+   sleep 0.1
+done
+
+
+
+函数:
+   1)定义函数
+     函数名(){
+	命令
+     }
+   2)函数名称      //不能写()
+
+
+# echo -e "\033[34mOK\033[0m"
+
+
+
+#vim test.sh
+------------------------------------
+#!/bin/bash
+
+cecho(){
+   echo -e "\033[32mOK\033[0m"
+}
+cecho
+cecho
+----------------------------------------
+
+
+
+#vim test.sh
+-------------------------------------
+#!/bin/bash
+cecho(){
+   echo -e "\033[$1m$2\033[0m"
+}
+cecho 32 OK
+cecho 33 Error
+cecho 34 Warning
+--------------------------------------
+
+#vim test.sh
+--------------------------------------
+#!/bin/bash
+
+for i in {1..254}
+do
+   ping -c2 -i0.2 -W1 172.40.91.$i &>/dev/null
+   if [ $? -eq 0 ];then
+	 echo "172.40.91.$i is up."
+   else
+	 echo "172.40.91.$i is down."
+   fi
+done
+
+
+
+函数：
+单行写法 ：ceho(){ echo dd;};ceho;
+注意 双引号里面$1,$2可以传参
+	单引号不行，不转义,不能传参S
+
+
+ping 
+	-c 2 127.0.0.1 只ping 两次
+	-i 2 间隔2s
+	-w 1 timeout 1s内ping不到 就结束
+
+
+/dev/null 无底洞D
+
+
+
+
+--------------------------------------------
+

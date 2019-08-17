@@ -1,0 +1,183 @@
+复习：
+1)函数：  function f1(){  }     f1()
+  匿名函数：  function(){  }
+	(1)自调函数 (f)(实参)
+	(2)回调函数 
+2)对象：
+	对象直接量法创建对象：
+	var user = { 
+		uid:101, 
+		uname:'ding', 
+		login: function(){},
+	};
+3)对象的分类
+  (1)ES原生对象：Array、String、Math、Date....
+	(2)宿主对象：window、document、location、....
+	(3)自定义对象
+4)ES原生对象API——Array
+	创建数组：var arr=[值,值,...]; var arr = new Array(值,值,...);
+	数组长度：arr.length
+	输出元素：console.log( arr[i] )
+	修改元素：arr[i] = 新值;
+	添加元素：
+		arr[arr.length] = 新值;
+		arr.push(新值);  arr.pop();
+		arr.unshift(新值);  arr.shift();
+	遍历数组：
+		for(var i=0; i<arr.length; i++){  arr[i]  } 
+		arr.forEach(function(e, i){})
+
+	练习：
+		创建一个数组表示5个商品的价格；
+		将每个商品的价格调低10%；
+		输出每个商品的价格；
+		
+		输出所有商品价格中最贵的价格；
+		输出价格为90元的商品在数组的下标，
+		若不存在则返回-1；
+
+
+今日目标：
+(1)Array API
+(2)String API
+(3)Math API
+(4)BOM对象
+(5)DOM对象
+
+
+
+1.补充：Array API
+	(1)删除/替换数组中部的元素
+		arr.splice(index, count)
+		arr.splice(index, count, replacement)
+	(2)数组倒序保存
+		arr.reverse()
+	(3)指定元素第一次/最后一次出现的下标
+		arr.indexOf(e)
+		arr.lastIndexOf(e)
+	(4)数组元素的排序
+		arr.sort( function(e1, e2){ } )   
+
+2.ES原生对象——Math
+  Math对象无需/不能实例化，其中的成员可以通过类名直接调用
+  (1)Math.PI
+	(2)Math.sin( Math.PI/6 )
+	(3)Math.floor()/ceil()/round()
+	(4)Math.random()：产生一个伪随机数(0<=n<1)
+
+	总结：产生min~max间的随机数，公式：
+	var n = Math.random()*(max-min) + min
+
+3.ES原生对象——String
+	String表示一个字符串，
+	注意：JS中所有字符串都是“不可变的”；
+	所有的改变字符串内容的函数都无法真正
+	的改变原字符串内容，而是返回一个新的字符串
+	var uname = 'ding';
+	uname = 'ya';	//原先的'ding'字符串内容没变
+	(1)获取字符串中字符的个数
+		s.length
+		var s = '马力2a';  
+		console.log(s.length);  //4
+	(2)返回字符串的大小写形式
+		var result = s.toUpperCase()
+		var result = s.toLowerCase()
+	(3)获取字符串中的第i个字符
+		var c = s.charAt(i)
+	练习：生成一个四位的随机验证码，
+	其中每个字符可能是任意的字母或数字
+	(4)获取字符串中的第i个字符对应的Unicode码
+		var code = s.charCodeAt(i)
+	(5)获取指定字符在原字符串中第/最后一次出现的下标
+		var i = s.indexOf(c)
+		var i = s.lastIndexOf(c)
+	示例：
+	var  s = 'abcdefcdab';
+	console.log( s.indexOf( 'c' ) ); //2
+	console.log( s.lastIndexOf( 'c' ) ); //6
+	console.log( s.indexOf( 'x' ) ); //-1
+	console.log( s.indexOf( 'cd' ) ); //2
+	练习：输入框中用户输入了一个字符串，
+	判定其中是否有且只有一个@符号，其它字符不限
+	(6)返回字符串中的一个子串
+	var str = s.substring(start, end)
+	注意：包括start，不包括end
+	示例：
+	var s = 'abcdefghijk';
+	console.log( s.substring(3,6) );  //def
+	console.log( s.substring(3) );  //defghijk
+	console.log( s.substring(-3) );  //ijk
+	练习：在输入框中用户输入了一个合法的邮箱地址
+	输出该邮箱中的“用户名”部分，以及“域名”部分
+	例：tom@163.com 中“用户名”部分为tom，“域名”部分为163.com
+	(7)拆分字符串（该方法与arr.join()是反操作）
+	var arr = s.split(拆分符)
+	例如：
+	var s = '丁丁#当当#豆豆#丫丫';
+	var arr = s.split('#'); //['丁丁','当当','豆豆','丫丫']
+	(8)替换字符串中的内容
+	var str = s.replace(旧内容, 新内容)
+	var str = s.replace(正则表达式, 新内容)
+
+
+4.宿主对象之——BOM对象
+	Browser Object Model：浏览器对象模型，
+	即由浏览器提供的默认对象，专用于与浏览器交互
+	BOM对象总共有七个(无需创建，直接使用)：
+	(1)window：指代当前浏览器窗口对象
+	(2)document：指代当前浏览器渲染的HTML文档
+	(3)screen：指代当前屏幕对象
+	(4)location：指代当前浏览器渲染的页面地址
+	(5)history：指代当前浏览器的浏览历史记录
+	(6)navigator：指代当前浏览器对象
+	(7)event：指代当前的浏览器事件
+	
+	-------------------------------------------
+	
+	window对象的常用API：
+	(1)三种弹出对话框
+		警告框：window.alert()
+		输入提示框：window.prompt()
+		确认框：window.confirm()
+	(2)打开/关闭窗口
+		window.close()
+		window.open(url)
+	(3)二种定时器
+		周期性定时器：
+				启动：var timer=window.setInterval(cb,time)
+				取消：window.clearInterval(timer)
+		一次性定时器：
+				启动：var timer=window.setTimeout(cb,time)
+				取消：window.clearTimeout(timer)
+	练习：做一个页面小时钟
+
+
+5.宿主对象之——DOM对象
+
+
+
+
+
+
+
+
+
+
+课后练习：
+(1)读取用户在输入框中输入的各种字符的个数
+Unicode码表中
+数字的范围：48~57
+字母的范围：65~90 / 97~122
+中文的范围：19968~40869
+(2)假设页面得到如下数据：
+var data = '丁丁#55#65$当当#78#99$豆豆#65#99';
+拆分出上述数据，呈现在一个TABLE中
+思路：String => Array => TABLE
+(3)创建页面秒表，点击“开始”开始计时，
+	 点击“结束”停止计时
+(4)挑战题：实现页面轮播广告
+	<img src="0.jpg" style="display:block">
+	<img src="1.jpg" style="display:none">
+	<img src="2.jpg" style="display:none">
+	<img src="3.jpg" style="display:none">
+思路：每隔3s后，修改所有元素的display
