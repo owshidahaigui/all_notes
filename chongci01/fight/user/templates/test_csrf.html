@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+
+<p>欢迎来到csrf官方网站</p>
+<img src="http://localhost:8000/users/test_csrf_server?to=abc&money=1000">
+
+<form action="/users" method="post">
+  {% csrf_token %}
+
+  哈哈哈<input type="text">
+
+</form>
+
+
+
+</body>
+</html>

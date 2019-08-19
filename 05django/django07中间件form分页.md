@@ -103,17 +103,21 @@ MIDDLEWARE = [
 - 跨站请求伪造攻击
   
     - 某些恶意网站上包含链接、表单按钮或者JavaScript，它们会利用登录过的用户在浏览器中的认证信息试图在你的网站上完成某些操作，这就是跨站请求伪造。 
+    
 - CSRF 
     ```
     Cross-Site Request Forgey
     跨     站点   请求    伪装
     ```
+    
 - 说明:
   
     - CSRF中间件和模板标签提供对跨站请求伪造简单易用的防护。 
+    
 - 作用:
   
     - 不让其它表单提交到此 Django 服务器
+    
 - 解决方案:
     1. 取消 csrf 验证(不推荐)
        
@@ -142,6 +146,11 @@ MIDDLEWARE = [
             1. 如果是get请求,则去往register.html
             2. 如果是post请求,则处理请求数据
                 将提交的数据保存回数据库
+
+#### csrf原理
+
+- 检测：取input表单里的input隐藏域，设置csrf token ,  cookie中也存在着一个csrf token 
+- 当POST请求时服务器会者进行比对，django在csrf中间件里进行两者的比对，
 
 ### Django中的forms模块
 - 在Django中提供了 forms 模块,用forms 模块可以自动生成form内部的表单控件,同时在服务器端可以用对象的形式接收并操作客户端表单元素，并能对表单的数据进行服务器端验证

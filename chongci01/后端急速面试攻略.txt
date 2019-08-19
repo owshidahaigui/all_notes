@@ -1,0 +1,146 @@
+250919354@qq.com
+郭小闹
+
+后端开发 - 
+app - 
+
+1，接请求【网络IO/C10K】 
+2, view层如何以比较低的时间复杂度把请求处理掉 return  [剑指offer python  百分之45【按数据结构分类均匀】] - 10大排序-快排+归并
+3，数据 - mysql[事务+索引树][钱 -> 事务+decimal] + redis[热数据都在内存] + mongodb4.0【副本集】 + Elasticsearch()
+
+linux命令
+innodb 聚集索引 B+树 
+1）只有叶子节点-包含数据 ，并且每个叶子节点 链表式 相连
+2）所有非叶子节点不包含数据
+
+
+
+
+tornado  yield实现协程版 server / tcp开发   -> Ioloop.py 
+gevnet   eventlet 
+
+换成非智能机
+·
+印象笔记 
+
+
+静态资源 -> CDN 内容网络分发
+
+
+北京->山东  【路由器跳转】 
+
+北京用户 -> 北京CDN节点去访问静态资源
+
+
+
+
+
+
+
+
+
+
+
+
+
+自定义models的字段类
+问：您在项目里遇到哪些难题？
+答：当初，在做表设计的时候，发现Django不能初始化char类型的字段，臣等十分惊恐；技术经理似乎也不懂，晚辈查阅了一下models.charfield源码，发现其本质是类的继承，随后，又发现重载db_type方法即可创建自定义的字段类；随后进行了相关常识~并取得突破性的进展~‘皇上’大悦~最终，我发现最好的文档莫过于源码！
+
+
+问：您在项目中如何统计用户日活和每日注册量/
+created_time add
+updated_time auto_now
+
+问：做过哪些功能？
+1，创建了自定义的字段类 -> char类
+2, 统计每天的注册量和每日日活 -> 8月19日当日注册用户量=
+created_time 8月19日的用户【多线程】； 8月19日活，update_time=8月19日
+3，单点登录 ->  
+
+	小明在电脑A上登录  ->  数据库中表 login_time 为t1 , 同时 电脑A中cookie 时间为t1
+
+
+	小明在电脑B上登录 ->  数据表里 login_time 为t2 ，电脑B中cookie 时间 t2
+
+
+	小红在电脑A上 发出一个请求， t1 -> 服务器，服务器login_time != t1 , 返回 对不起 检测到已在其他设备上登录
+
+4，image字段部分，我们也在考虑用cdn； 比如网宿 蓝汛 阿里；
+做下载服务器源站
+5，cookie -> 1,下次免登录 【一旦用户登陆成功，存储用户名或id set_cookie('username', username, 7day) -  】
+6, 在产品上线第一周【时间可改】时，发现django-session表中有大量过期数据，臣等惶恐！待我观察源码之后，发现django没有惰性删除机制，所以，我们积极调查解决方案，最终发现了问题的切入点！！！-----> python3 manage.py clearsessions！
+	flask -> client side session - 把用户session数据存入cookie   session data加密
+
+
+
+
+常见web防范
+1，csrf攻击
+	Input表单里隐藏域中设置csrf token
+	cookie中也存在着一个csrf token
+
+	当post提交，cookie中的token以及input里面的token一并传给服务器。django在csrf中间件里，进行了两者的比对
+	from django.middleware.csrf import _compare_salted_tokens
+	比对结果为true 则为正常请求， 否则返403
+
+2，xss攻击 cors script 攻击
+
+	案例： 用户通过表单提交 js 代码时，会触发 xss攻击；
+	例如提交 <script>alert(111)</script>,若攻击生效，则在
+	页面上会执行提交的js代码；
+	解决方案： 
+	1,import html
+		html.escape(‘表单提交的数据’)
+
+	2，django模板是默认开启 html转义的~若想关闭转义，
+	{{变量|safe}}
+
+
+3, sql 注入 
+	查询某一个商品  搜索框里搜 手机； '' OR 1=1;'  ' ;delete from table_name;' 
+
+	sql = select * from goods where name = '%s' %(提交数据)
+
+	from django.db import connection
+	with connection.cursor() as cur: 
+	    cur.execute(sql)
+
+	django 中ORM对其进行了过滤， '\'
+
+	尽量使用objects.get .filter
+
+
+
+
+
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

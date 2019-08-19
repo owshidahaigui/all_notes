@@ -2,7 +2,7 @@ Linux系统第一天：
     1）Linux系统简介
     2 ) Linux系统目录结构
 
-![01](/home/tarena/桌面/month4/linux/Aid-Day01/01.jpg)
+![01](01.jpg)
 
 ​    3）Linux硬盘表示
 ​    4）系统常见命令
@@ -610,7 +610,7 @@ tarena@aid:/$ cat    /home/tarena/ls.txt
 
 
 
-​  ###快捷键：
+  ###快捷键：
 – Ctrl + l:清空整个屏幕 
 – Ctrl + c:废弃当前编辑的命令行(结束正在运行的命令)
 – Esc + . 或 Alt + .:粘贴上一个命令的参数

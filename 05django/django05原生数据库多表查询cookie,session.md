@@ -727,13 +727,13 @@ def show_cookie(request):
 - session的基本操作:
     - Session对象是一个 QueryDict 字典, 可以用类拟于字典的方式进行操作
     - 保存 session 的值到服务器
+        - 浏览器cookie存储sid，32位唯一码 
         - `request.session[键] = 值`
         - 如: `request.session['KEY'] = VALUE`
     - 获取session的值
         - `VALUE = request.session['KEY']`
         - 或
-        - `VALUE = request.session.get('KEY', 缺省值)`
-
+    - `VALUE = request.session.get('KEY', 缺省值)`
     - 删除session的值
         - `del request.session['KEY']`
     - 在 settings.py 中有关 session 的设置
@@ -742,7 +742,9 @@ def show_cookie(request):
             SESSION_COOKIE_AGE = 60*30
         2. SESSION_EXPIRE_AT_BROWSER_CLOSE = True
             设置只要浏览器关闭时,session就失效
-
+    3. session默认会存储在django-session数据库中，而且会一直存在,需要惰性删除
+            - python3 manage.py clearsessions   清理数据库过期session
+    
 - 注: 当使用session时需要迁移数据库,否则会出现错误
 ```sh
 $ python3 manage.py makemigrations
