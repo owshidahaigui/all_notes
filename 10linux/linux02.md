@@ -8,6 +8,140 @@
 3）权限和归属：基本权限 基本归属  chmod  chown
 4）进程管理：pstree  ps aux  pgrep  进程前后台调度  杀死进程
 
+## sort&uniq文本行排序命令
+
+### sort
+
+**参数：**
+-b：忽略每行前面开始出现的空格字符
+-c：检查文件是否已经按照顺序排序
+-d：排序时，处理英文字母、数字及空格字符外，忽略其它字符。
+-f：排序时，将小写字母视为大写字母
+-i：排序时，除了040至176之间的ASCII字符外
+-k:  通过键排序;KEYDEF给出位置和类型
+-m：将几个排序好的文件进行合并
+-M：将前面三个字母依照月份的缩写进行排序
+-n：依照数值大小进行排序
+-o<输出文件>：将排序后的结果存入指定文件
+-r：以相反的顺序来排序
+-u: 忽略相同行 ，配合-c，严格校验排序；不配合-c，则只输出一次排序结果
+-t<分割字符>：指定排序时所用的分隔符
++<起始栏位>-<结束栏位> 以指定的栏位来排序，范围由起始栏位到结束栏位的前一栏位
+--help 显示帮助。
+
+**实例：**
+
+1. 以ASC||顺序排序
+
+    ```shell
+    sort test1
+    ```
+
+2. 忽略文件相同行
+
+    ```shell
+    sort -u test1
+    uniq test1
+    #都可以
+    ```
+
+3. sort -n -r -k -t的使用
+    原文件
+
+    ```shell
+    AAA:BB:CC
+    aaa:30:1.6
+    ccc:50:3.3
+    ddd:20:4.2
+    bbb:10:2.5
+    eee:40:5.4
+    eee:60:5.1
+    ```
+
+    - 将BB列按照数字从小到大顺序排列：
+
+    ```
+    sort -nk 2 -t: sort.txt
+    AAA:BB:CC
+    bbb:10:2.5
+    ddd:20:4.2
+    aaa:30:1.6
+    eee:40:5.4
+    ccc:50:3.3
+    eee:60:5.1
+    ```
+
+    - 将CC列数字从大到小顺序排列：
+
+    ```
+    sort -nrk 3 -t: sort.txt
+    eee:40:5.4
+    eee:60:5.1
+    ddd:20:4.2
+    ccc:50:3.3
+    bbb:10:2.5
+    aaa:30:1.6
+    AAA:BB:CC
+    ```
+
+    - **-n是按照数字大小排序，-r是以相反顺序，-k是指定需要爱排序的栏位，-t指定栏位分隔符为冒号**
+
+4. **-k选项的语法格式：**
+
+    - **从公司英文名称的第二个字母开始进行排序：**
+
+    ```
+    sort -t ' ' -k 1.2 book.txt  ##以空格为分隔符
+    baidu 100 5000
+    sohu 100 4500
+    google 110 5000
+    guge 50 3000
+    ```
+
+    - 使用k 1.2表示第一个域的第二个字符开始到本域的最后一个字符为止的字符串进行排序。sohu与google第二个字符相同，所以按照第三个字符来对这两字符谁前谁后排序。
+
+### uniq
+
+**作用：uniq命令用于报告或忽略文件中的相邻重复行，一般先使用sort命令把相同的放到一起后再使用**
+
+- **选项：**
+    -c或——count：在每列旁边显示该行重复出现的次数；
+    -d或--repeated：仅显示重复出现的行列；
+    -f<栏位>或--skip-fields=<栏位>：忽略比较指定的栏位；
+    -s<字符位置>或--skip-chars=<字符位置>：忽略比较指定的字符；
+    -u或——unique：仅显示出一次的行列；
+    -w<字符位置>或--check-chars=<字符位置>：指定要比较的字符。
+
+- 实例
+    删除重复行：
+
+    ```shell
+    uniq file.txt
+    sort file.txt | uniq
+    sort -u file.txt
+    ```
+
+    只显示单一行
+
+    ```shell
+    uniq -u file.txt
+    sort file.txt | uniq -u
+    ```
+
+    统计各行在文件中出现的次数：
+
+    ```shell
+    sort file.txt | uniq -c
+    ```
+
+    在文件中找出重复的行： 
+
+    ```shell
+    sort file.txt | uniq -d
+    ```
+
+    
+
 ## 管道操作   | ：
 
 ​        **将前面命令的输出，专递给后面命令，作为后面命令的参数**
@@ -73,8 +207,11 @@ tarena@tedu:~$ sudo  vim   /home/tarena/haha.txt
 **模**
 **式----  ：键 ----》 末行模式（Esc键回到命令模式）**
 
-  **末行模式     ：wq      #保存并退出**
-                     **：q！    #强制不保存退出**
+  **末行模式 **
+
+- **:wq   保存并退出**
+
+- **:q!  强制不保存退出**
 
 ```
 tarena@tedu:~$ sudo  vim   /home/tarena/dc.txt
@@ -101,8 +238,9 @@ $ vim    /home/tarena/p.txt
        /bin  : 全文查找bin    按n向下跳转匹配   按N向上跳转匹配
 
 **末行模式：**
-        ：set   nu     #开启行号功能
+ 	   ：set   nu     #开启行号功能
         ：set   ai      #开启自动缩进功能
+		： %s/原字符/目的字符/g     #全局替换
 
 ```shell
 tarena@tedu:~$ vim /home/tarena/b.txt
@@ -221,6 +359,7 @@ aid01用户一共属于5各组：aid01组  财务组  销售组  帅哥组   美
 tarena@tedu:~$ sudo adduser aid02           #交互式创建
 tarena@tedu:~$ sudo useradd  -m  aid03    #非交互式创建
              -m：创建用户的家目录
+             -u：设置用户id
 
 tarena@tedu:~$ id  aid02     #查询存在用户的信息
 tarena@tedu:~$ id  aid03     #查询存在用户的信息
