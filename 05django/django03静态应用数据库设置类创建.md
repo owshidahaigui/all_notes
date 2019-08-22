@@ -1,26 +1,6 @@
-
 # 《Django 教程》
- - 讲师: 魏明择
- - 时间: 2019
 
-## 目录
-<!-- TOC depthFrom:3 depthTo:5 -->
 
-- [静态文件](#静态文件)
-- [Django中的应用 - app](#django中的应用---app)
-    - [什么是应用(app)](#什么是应用app)
-    - [创建应用app](#创建应用app)
-    - [Django应用的结构组成](#django应用的结构组成)
-- [数据库 和 模型](#数据库-和-模型)
-    - [Django下使用mysql数据库](#django下使用mysql数据库)
-- [模型（Models）](#模型models)
-- [Python 数据库模型 - Models](#python-数据库模型---models)
-    - [字段选项](#字段选项)
-    - [数据库的操作(CRUD操作)](#数据库的操作crud操作)
-        - [创建数据对象](#创建数据对象)
-        - [查询数据](#查询数据)
-
-<!-- /TOC -->
 
 ### 静态文件
 1. 什么是静态文件
@@ -249,13 +229,14 @@
             - `'PORT':'3306'`
     3. 添加 mysql 支持
         - 安装pymysql 模块
+            
             - `$ sudo pip install pymysql`
         - 修改项目中__init__.py 加入如下内容来提供pymysql引擎的支持
             ```py
             import pymysql
             pymysql.install_as_MySQLdb()
-            ```
-
+        ```
+    
 3. 数据库的迁移
     - 迁移是Django同步您对模型所做更改（添加字段，删除模型等） 到您的数据库模式的方式
     1. 生成或更新迁移文件
@@ -409,10 +390,12 @@
             - 默认表名组成规范:
                 - 应用名称_classname
         1. NAME
+            
             - 属性名,映射回数据库就是字段名
         1. FIELD_TYPE
+        
             - 字段类型:映射到表中的字段的类型
-
+    
 3. FIELD_TYPE 类型及含义
     1. BooleanField()
         - 数据库类型:tinyint(1)
@@ -589,6 +572,7 @@ mysql> select * from bookstore_book;
 - Django 使用一种直观的方式把数据库表中的数据表示成Python 对象
 - 创建数据中每一条记录就是创建一个数据对象
     1. Entry.objects.create(属性=值, 属性=值)
+        
         - 返回值: 返回创建好的实体对象
     2. 创建Entry对象,并调用 save() 进行保存
         ```
@@ -602,8 +586,8 @@ mysql> select * from bookstore_book;
         dic = {
             '属性1':'值',
             '属性2':'值2',
-        }
-
+    }
+    
         obj = Entry(**dic)
         obj.save()
         ```
