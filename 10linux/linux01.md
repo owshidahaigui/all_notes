@@ -46,7 +46,7 @@ Linux系统第一天：
 ​    4）系统常见命令
 
 ```shell
-cat /etc/lsb_release  hostname  ifconfig  lscpu
+cat /etc/lsb-release  hostname  ifconfig  lscpu
 cat /proc/meminfo
 cat /etc/resolv.conf   bc  date
 ls  pwd  cd(绝对路径)   mkdir  touch
