@@ -1,24 +1,5 @@
 
 # 《Django 教程》
- - 讲师: 魏明择
- - 时间: 2019
-
-## 目录
-<!-- TOC depthFrom:3 depthTo:5 -->
-
-- [文件上传](#文件上传)
-- [Django中的用户认证 (使用Django认证系统)](#django中的用户认证-使用django认证系统)
-    - [auth基本模型操作:](#auth基本模型操作)
-    - [Web请求中的认证](#web请求中的认证)
-- [项目部署](#项目部署)
-    - [WSGI Django工作环境部署](#wsgi-django工作环境部署)
-    - [uWSGI 网关接口配置](#uwsgi-网关接口配置)
-    - [nginx 反射代理配置](#nginx-反射代理配置)
-    - [nginx 配置静态文件路径](#nginx-配置静态文件路径)
-    - [404 界面](#404-界面)
-
-<!-- /TOC -->
-
 ### 文件上传
 - 文件上传必须为POST提交方式
 - 表单`<form>`中文件上传时必须有带有`enctype="multipart/form-data"` 时才会包含文件内容数据。
@@ -455,11 +436,13 @@ class User(AbstractUser):
     - 注意，此时端口号为8000
 #### nginx 反射代理配置
 - Nginx是轻量级的高性能Web服务器，提供了诸如HTTP代理和反向代理、负载均衡、缓存等一系列重要特性，在实践之中使用广泛。
+
 - C语言编写，执行效率高
 
 - nginx 作用
     - 负载均衡， 多台服务器轮流处理请求
     - 反射代理
+    
 - 原理:
   
 - 客户端请求nginx,再由nginx 请求 uwsgi, 运行django下的python代码
@@ -467,6 +450,8 @@ class User(AbstractUser):
 - ubuntu 下 nginx 安装
     $ sudo apt install nginx
 
+- 关闭系统防火墙
+    
 - nginx 配置 
     - 修改nginx 的配置文件 /etc/nginx/sites-available/default
     ```
@@ -480,25 +465,30 @@ class User(AbstractUser):
         ...
     }
     ```
-- 启动 nginx
-    - `$ sudo /etc/init.d/nginx start`
-    - 或
-    - `$ sudo service nginx restart`
-- 查看nginx进程
-    - `$ ps aux | grep nginx`
-    - 或
-    - `$ sudo /etc/init.d/nginx status`
-    - 或
-    - `$ sudo service nginx status`
-- 停止nginx
-    - `$ sudo /etc/init.d/nginx stop`
-    - 或
-    - `$ sudo service nginx stop`
-- 重启nginx
-    - `$ sudo /etc/init.d/nginx restart`
-    - 或
-    - `$ sudo service nginx restart`
-
+    
+    - ubuntu系统nginx首页存储路径：/usr/share/nginx/html
+    
+- 启动 nginx方式
+    1. `$ sudo /etc/init.d/nginx start`
+    
+    2. `$ sudo service nginx restart`
+    
+- 查看nginx进程方式
+    1. `$ ps aux | grep nginx`
+    
+    2. `$ sudo /etc/init.d/nginx status`
+    
+    3. `$ sudo service nginx status`
+    
+- 停止nginx方式
+    1. `$ sudo /etc/init.d/nginx stop`
+    
+    2. `$ sudo service nginx stop`
+    
+- 重启nginx方式
+    1. `$ sudo /etc/init.d/nginx restart`
+    2. `$ sudo service nginx restart`
+    
 - 修改uWSGI配置 
     - 修改`项目文件夹/uwsgi.ini`下的Http通信方式改为socket通信方式,如:
     ```ini
@@ -535,7 +525,14 @@ class User(AbstractUser):
 ```
 - 修改配置文件后需要重新启动 nginx 服务
 
+#### nginx多台服务器设置（centos）
+
+![ngnix01](img/ngnix01.png)
+
+![ngnix02](img/ngnix02.png)
+
 #### 404 界面
+
 - 在模板文件夹内添加 404.html 模版，当响应返回HttpResponseNotFound 或 raise Http404时将会被显示
 - 404.html 仅在发布版中(即setting.py 中的 DEBUG=False时) 才起作用
 - 当向应处理函数触发Http404异常时就会跳转到404界面

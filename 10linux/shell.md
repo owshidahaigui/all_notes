@@ -1,22 +1,101 @@
 ## shell编程
 
-### Shell与Python区别:
+- **shell和Python的区别**
+    - Python是调用模块\通用设计语言
+        Shell是调用命令\Linux系统自动化
 
-Python是调用模块\通用设计语言
-Shell是调用命令\Linux系统自动化
+### 二、shell 命令解释器
 
-### 1.Shell格式
+shell命令 cp  ls   date
+Linux支持的shell
+	cat /etc/shells
+	chsh -l
+
+### 三、GUN和bash shell特点
+
+1. 命令和文件自动补齐功能
+2. 命令历史技艺功能 上下键、!number、
+    1. !string 、最近出现的命令模糊匹配
+    2. !$、上一个命令的最后一个参数
+    3. !!、  上一个命令
+    4. ^R     ctrl+r 搜索历史命令
+3. 别名功能 alias  unalias cp   ~username/.bashrc 
+    1.  \cp -rf /etc/hosts  加斜线跳过表名
+4. 快捷键 ^R  ^D  ^A  ^E  ^U  ^K  ^S  ^Q  
+5. 前后台作业控制 &  
+    1.  nohup    把进程放到后端
+    2. ^C  ^Z   bg  %1    kill%3 
+    3.  fg%1   vim妙用  ，首先是进入vim，编辑一半，ctrl+z 退出，命令行操作，fg返回vim
+    4. screen 
+6. 输入输出重定向 0输入,1输出,2输出错误，>  >>   2>   2>> 2>&1   &> 混合输出，无论对错     cat <  /etc/hosts   、 cat<<EOF 、
+    1. cat > file1 <<EOF   快速输入内容到文件中去
+
+7. 管道 |
+
+    - |tee 类似重定向，好处是内容可以打印在屏幕同时输入到文件中去
+
+        - |tee   filename    将管道的某段内容写到文件中取
+        - |tee  -a   filename   追加
+
+        ```shell
+        [tarena@localhost ~]$ date |tee date.txt
+        2019年 08月 23日 星期五 04:40:47 PDT
+        [tarena@localhost ~]$ cat date.txt 
+        2019年 08月 23日 星期五 04:40:47 PDT
+        ```
+
+8. 排序命令
+    ;          不具备逻辑判断,分号分行
+    cd:eject
+    &&     ||  具备逻辑判断
+
+    ```shell
+    ./configure  && make && make install (命令返回值  echo $?)
+    mkdir /var/111/2222/333  && echo ok
+    mkdir -p /var/111/222/333  && echo ok
+    ls /home/111/222/333/444 || mkdir -p /home/111/222/333/444
+    [  -d /home/111/222/333/444 ] || mkdir -p /home/111/222/333/444
+    ping -c1 176.234.8.16 &> /dev/null && echo up || echo dwon 
+    ```
+
+    - **注意：**
+        command &					          后台运行
+        command & >/dev/null           混合重定向(标准输出1，错误输出2)
+        command 1&& command2    命令排序，逻辑判断
+
+### 1.Shell
 
    扩展名一般是.sh
    正文的第一行必须是解释器#!/bin/bash
    #注释
    调用命令的代码
 
+**login_shell和nologin_shell**：
+
+![login_shell和nologin_shell](shell_img/login_shell和nologin_shell.png)
+
+- **图片解析：**环境文件红色的和蓝色的是登录时执行，黄色的是用户退出时执行，login shell  登录时启动全部环境，nologin shell 只执行bashrc文件 ，su的时候 -的区别
+
+    ```
+    [tarena@localhost ~]$ cat /etc/shells 
+    /bin/sh
+    /bin/bash
+    /sbin/nologin
+    /usr/bin/sh
+    /usr/bin/bash
+    /usr/sbin/nologin
+    /bin/tcsh
+    /bin/csh
+    ```
+
+    - 每行最后面显示nologin为非登录shell
+
 ### 2.执行shell脚本的格式
 
   1)加权限,相对路径或绝对路径执行
   2)没有权限,bash 脚本名称
-  3)source 脚本名   [不启动子进程]
+  3)source 脚本名   [不启动shell子进程]
+  4)   .  脚本名[不启动shell子进程]
 
   正常执行脚本
 
@@ -24,10 +103,19 @@ Shell是调用命令\Linux系统自动化
 bash----->test.sh(命令exit)
 ```
 
-  不启动子进程
+  不启动子进程和启动子进程的区别
 
 ```shell
-bash(命令exit)
+tarena@tarena:~/桌面/code$ vim shell02.sh
+#!/bin/bash
+cd /home/
+ls
+tarena@tarena:~/桌面/code$ ./shell02.sh		#启动子进程执行脚本
+aid02  aid04  tarena
+tarena@tarena:~/桌面/code$ . ./shell02.sh	    #不启动子进程执行脚本，
+aid02  aid04  tarena
+tarena@tarena:/home$    	#本窗口路径跳转到脚本命令执行后的地方
+#启动子进程就是得到结果，结果不影响本shell窗口。不启动就是本窗口执行命令,路径跳转
 ```
 
 ### 3.变量
@@ -90,8 +178,6 @@ chmod +x test.sh
 ./test.sh  /tmp   myfile
 ```
 
-
-
 ### read命令读取用户的输入:
 
 read 变量名(类似于python3 inupt)
@@ -138,7 +224,7 @@ vim test.sh
 
 
 
-#### 1)字符判断
+**1)字符判断**
 
 ​     [ A == A ]    #相等(等号两边需要有空格)
 ​     [ A != B ]    #不相等
@@ -158,7 +244,7 @@ vim test.sh#!/bin/bash
 	echo "$username:$passwd" | chpasswd
 ```
 
-#### 2)数字比较(man test)
+**2)数字比较(man test)**
 
 ​	-eq	等于(equal)
 ​	-ne	不等于(not equal)
@@ -173,7 +259,7 @@ vim test.sh#!/bin/bash
 [ 5 -ge 3 ] && echo Y || echo N
 ```
 
-#### 3)文件或目录
+**3)文件或目录**
 
 ​       [ -e 文件或目录 ]    #是否存在exist
 
@@ -190,16 +276,16 @@ vim test.sh#!/bin/bash
 [ -d /etc/passwd ] && echo Y || echo N
 ```
 
-### if语句语法格式:
+### if语句:
 
-####    1)单分支
+**1)单分支**
 
 ​     if 判断 ;then
 ​        命令
 ​        命令
 ​     fi
 
-####    2)双分支
+**2)双分支**
 
 ​     if 判断 ;then
 ​	命令1
@@ -207,7 +293,7 @@ vim test.sh#!/bin/bash
 ​        命令2
 ​     fi
 
-####    3)多分支
+**3)多分支**
 
 ​     if 判断;then
 ​        命令1
@@ -242,7 +328,7 @@ vim test.sh
 	fi
 ```
 
-### 如何进行数字运算:
+### 数字运算:
 
   1) echo $[数字+数字]      #+ - * / %
 
@@ -255,9 +341,9 @@ let x=2*8
 echo $x
 ```
 
-### **如何进行循环操作:for,while**
+### **循环操作:for,while**
 
-for的语法格式:
+**for的语法格式:**
 
   for 变量 in 值序列
   do
@@ -289,7 +375,7 @@ vim test.sh
 	done
 ```
 
-#### while循环语法格式:
+**while循环:**
 
    while 判断            #判断为真则执行命令
    do
@@ -365,7 +451,7 @@ vim test.sh
 	done
 ```
 
-#### 函数单行写法 ：
+- **函数单行写法 ：**
 
 ```shell
 ceho(){ echo dd;};ceho;
@@ -375,15 +461,15 @@ ceho(){ echo dd;};ceho;
 
 ### cookie:
 
-##### ping 的用法,检测是否和某ip地址能相连
+**ping 的用法,检测是否和某ip地址能相连**
 
 ​	-c 2 127.0.0.1 只ping 两次
 ​	-i 2  间隔2s ，最好不要小于0.2
 ​	-w 1 timeout 1s内ping不到 就结束
 
-##### /dev/null   可以把没有用的结果重定向到这个文件中
+**/dev/null   可以把没有用的结果重定向到这个文件中**
 
-##### $(命令)    提取命令的结果值
+**$(命令)    提取命令的结果值**
 
 **free 看内存**
 
@@ -420,38 +506,38 @@ vim test.sh
 	wait
 ```
 
-#### //等待所有后台子进程结束，主脚本才结束.
+- **//等待所有后台子进程结束，主脚本才结束.**
 
 ### 正则表达式:(模糊匹配)
 
 使用一些特征来描述你的数据.
 
-#### **网站日志:IP(哪个地区的用户)**
+- **网站日志:IP(哪个地区的用户)**
 
 ​         PV(page view),UV(user view)
 ​	 	热点数据...
 ​			(用户画像--->千人千面)
 
-#### **基本正则:(单个字符为单位)**
+- **基本正则:(单个字符为单位)**
 
    ^(开始) $(结尾) []集合 [^]集合取反
    .(任意单个字符)
    *(匹配任意次)
    \{n,m\}  \{n\}   \{n,\}
 
-#### **扩展正则:**
+- **扩展正则:**
 
 ​    {n,m}  {n,}  {n}
 ​    +(匹配至少1次)  
 ​    ?(匹配0或1次)
 ​    ()组合+保留
 
-#### **Posix正则:**
+- **Posix正则:**
 
 ​    [:alpha:] [:digit:] [:alnum:] [:punct:]
 ​    [:space:]... 
 
-#### **perl正则**
+- **perl正则**
 
 ​    \d,\w,\s,\W
 
@@ -506,7 +592,7 @@ do
 done
 ```
 
-#### 语法格式:
+- **语法格式:**
 
    **sed [选项] '条件+指令'  文件名**
 指令:增、删、改、查
@@ -682,9 +768,9 @@ awk -F:  '$3>=1000'  /etc/passwd
 
 #### awk的语法格式:
 
-####   awk [选项]  '条件{指令}  END{指令}'  文件名
+- **awk [选项]  '条件{指令}  END{指令}'  文件名**
 
-#### END{}中的指令,仅在所有文件内容读取完成后执行1次.
+- **END{}中的指令,仅在所有文件内容读取完成后执行1次.**
 
 **利用awk也可以做统计工作:**
 

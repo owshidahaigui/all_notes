@@ -206,6 +206,7 @@ tarena@aid:~$ ls   /dev/sda    #SCSI类型的设备，第一块硬盘
 
 pwd ：输出当前所在的位置
 cd ：切换路径的操作
+		cd -  返回上一个路径
 
 ```shell
 tarena@aid:~$ pwd
@@ -339,6 +340,12 @@ $ ls    -ld   /             #显示/目录本身的详细属性
 cat： -n 显示行号
 
 ```shell
+tarena@aid:/$ cat -n /etc/passwd
+```
+
+tac: 倒叙查看文件内容与cat类型，顺序相反
+
+```
 tarena@aid:/$ cat -n /etc/passwd
 ```
 
@@ -570,6 +577,10 @@ tarena@aid:/$ ls   /opt/
 ```
 
 grep ：可以从文本文件内容中，过滤包含指定字符串的行
+参数：
+
+- -i：字母不区分大小写
+- -n：显示行号
 
 ```shell
 tarena@aid:/$ grep   root   /etc/passwd   #包含root的行
@@ -597,19 +608,29 @@ tarena@aid:/$ sudo   find  /boot/   -size  +10M   #查找大于10M
 tarena@aid:/$ sudo   find  /boot/   -size   -10M   #查找小于10M
 ```
 
+PATH:
+
+说明：环境变量
+设置：
+
+方式1：一次性的设置
+		export PATH = $PATH:dir1[:dir2]
+
+方式2：永久性的设置，所有有效，需要重启生效或使用source命令
+		将方式1的导出操作添加到文件/etc/profile的末尾
+方式3：永久性的设置，只针对一个用户，需要重启生效或者使用source命令，优先级高于2
+		将方式1的导出操作添加到文件~/.bashrc的末尾
+
+
+
 ## 十、命令行技巧
 
-Tab补全：命令字    选项      路径
+#### Tab补全：命令字    选项      路径
 
 ```shell
 tarena@aid:/$ if（tab）（tab）  #连续按两次tab，显示已if开头的
+
 ```
-
-if        ifdown    ifup
-ifconfig  ifquery 
-
-if        ifdown    ifup
-ifconfig  ifquery 
 
 ```shell
 tarena@aid:/$ ifc（tab）
@@ -618,9 +639,15 @@ tarena@aid:/$ ls    /et（tab）/ls（tab）
 tarena@aid:/$ cat    /et（tab）/ls（tab）
 ```
 
-重定向命令的输出： 将前面命令的输出，写入到文本文件中
-       >：覆盖重定向
-      >>：追加重定向
+#### 重定向命令的输出： 将前面命令的输出，写入到文本文件中
+
+- 》：覆盖重定向
+
+- 》》：追加重定向
+
+0
+1
+2
 
 ```shell
 tarena@aid:/$ ls  --help 
@@ -647,6 +674,23 @@ echo 输入，input
 tarena@aid:/$ echo   123456    >>   /home/tarena/ls.txt 
 tarena@aid:/$ cat    /home/tarena/ls.txt 
 ```
+
+#### 反向重定向<<和EOF
+
+反向重定向就是将接下来的数据返回给<<前面的命令执行。配合EOF取范围，EOF之间为实际重定向范围
+
+```shell
+tarena@tarena:~$ cat << -EOF  #输入命令，
+> daf		输入数据
+> fdsaf
+> EOF     输入结束
+daf			打印之前的输入
+fdsaf
+```
+
+- 注意：这种用法可以在shell脚本中使用到达使用多种语言的效果
+
+
 
 
 

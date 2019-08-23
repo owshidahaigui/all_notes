@@ -426,17 +426,7 @@ OK
 9、incr key
 10、decr key
 11、incrbyfloat key number
-# 设置过期时间的两种方式
-# 方式一
-1、set key value ex 3
-# 方式二
-1、set key value
-2、expire key 5 # 秒
-3、pexpire key 5 # 毫秒
-# 查看存活时间
-ttl key
-# 删除过期
-persist key
+
 ```
 
 - **通用命令**
@@ -461,6 +451,24 @@ flushdb
 # 清除所有库中所有数据（慎用）
 flushall
 ```
+
+**注意：设置主键过期时间（五种数据类型的一级主键都可以）**
+
+```shell
+# 设置过期时间的两种方式
+# 方式一（只适用于字符串类型）
+1、set key value ex 3
+# 方式二（适用于所有所有数据类型）
+1、set，add，lpush，zadd，hset 先创建一个主键，字符串，集合，列表，有序集合，哈希都可以
+2、expire key 5 # 秒
+3、pexpire key 5 # 毫秒
+# 查看存活时间
+ttl key
+# 删除过期
+persist key
+```
+
+
 
 **string数据类型注意**
 

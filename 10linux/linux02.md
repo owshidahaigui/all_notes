@@ -18,7 +18,7 @@
 -d：排序时，处理英文字母、数字及空格字符外，忽略其它字符。
 -f：排序时，将小写字母视为大写字母
 -i：排序时，除了040至176之间的ASCII字符外
--k:  通过键排序;KEYDEF给出位置和类型
+-k:  通过键排序;KEYDEF给出位置和类型（和nr一起使用是放nr后面）
 -m：将几个排序好的文件进行合并
 -M：将前面三个字母依照月份的缩写进行排序
 -n：依照数值大小进行排序
@@ -40,7 +40,7 @@
 2. 忽略文件相同行
 
     ```shell
-    sort -u test1
+    sort -u test1#比下面的好使
     uniq test1
     #都可以
     ```
@@ -84,7 +84,7 @@
     AAA:BB:CC
     ```
 
-    - **-n是按照数字大小排序，-r是以相反顺序，-k是指定需要爱排序的栏位，-t指定栏位分隔符为冒号**
+    - **-n是按照数字大小排序(默认从小到大)，-r是以相反顺序，-k是指定需要爱排序的栏位，-t指定栏位分隔符为冒号**
 
 4. **-k选项的语法格式：**
 
@@ -144,7 +144,7 @@
 
 ## 管道操作   | ：
 
-​        **将前面命令的输出，专递给后面命令，作为后面命令的参数**
+​        **将前面命令的输出，传递给后面命令，作为后面命令的参数**
 
 **查看文件/etc/passwd内容的头4行？**
 
@@ -588,6 +588,30 @@ tarena@tedu:~$ pgrep   -l  oneko      #-l：显示完整进程名
 **top：**动态的排名    按P（大写）进行CPU排序(默认)
                                   按M（大写）进行内存排序
 
+```shell
+top - 11:39:31 up 4 days,  2:54,  1 user,  load average: 0.98, 1.15, 1.17
+任务: 329 total,   1 running, 282 sleeping,   0 stopped,   0 zombie
+%Cpu(s):  6.8 us,  2.0 sy,  0.0 ni, 90.6 id,  0.2 wa,  0.0 hi,  0.4 si,  0.0 st
+KiB Mem :  8058080 total,  1148968 free,  3678040 used,  3231072 buff/cache
+KiB Swap:  2097148 total,  1724412 free,   372736 used.  2810344 avail Mem 
+```
+
+![top](linux_img/top.png)
+
+**w:**当前系统在干嘛
+![w](linux_img/w.png)
+
+**vmstat:**
+
+```shell
+tarena@tarena:~/桌面$ vmstat
+procs -----------memory---------- ---swap-- -----io---- -system-- ------cpu-----
+ r  b   交换     空闲  缓冲      缓存   si   so    bi    bo   in   cs  us sy id wa st
+ 6  0 372736 1381456 478932 2664248    0    0    10    17   28   18  5  2  92  0  0
+```
+
+![vmstat](linux_img/vmstat.png)
+
 ####  2.进程前后台调度
 
 ​	**• 后台启动** 
@@ -618,3 +642,46 @@ killall  -9  -u   用户名
 ​     -a：所有正在监听         -n：数字方式显示
 ​     -p：显示协议信息          -t：tcp协议
 ​     -u：udp协议
+
+## 五、关闭防火墙（负载均衡时使用）
+
+1. #### 查看当前防火墙状态
+
+  在Ubuntu中 我们使用**sudo ufw status**命令查看当前防火墙状态;
+
+- inactive状态是防火墙关闭状态 
+- active是开启状态。
+
+```shell
+tarena@tarena:/usr/share$ sudo ufw status 
+[sudo] tarena 的密码： 
+状态：不活动
+```
+
+2. #### 开启防火墙
+
+**sudo ufw enable命令来开发防火墙**
+
+```shell
+tarena@tarena:/usr/share$ sudo ufw enable
+在系统启动时启用和激活防火墙
+tarena@tarena:/usr/share$ sudo ufw status 
+状态： 激活
+```
+
+3. #### 关闭防火墙
+
+**sudo ufw disable命令来关闭防火墙**
+
+```shell
+tarena@tarena:/usr/share$ sudo ufw disable
+防火墙在系统启动时自动禁用
+```
+
+4. #### Ubuntu中其他常用的防火墙命令
+
+- ufw default allow/deny:外来访问默认允许/拒绝
+- ufw allow/deny 20：允许/拒绝 访问20端口,20后可跟/tcp或/udp，表示tcp或udp封包。
+- ufw allow/deny servicename:ufw从/etc/services中找到对应service的端口，进行过滤。
+- ufw allow proto tcp from 10.0.1.0/10 to 本机ip port 25:允许自10.0.1.0/10的tcp封包访问本机的25端口。
+- ufw delete allow/deny 20:删除以前定义的"允许/拒绝访问20端口"的规则
