@@ -20,6 +20,7 @@ Linux支持的shell
     3. !!、  上一个命令
     4. ^R     ctrl+r 搜索历史命令
 3. 别名功能 alias  unalias cp   ~username/.bashrc 
+    
     1.  \cp -rf /etc/hosts  加斜线跳过表名
 4. 快捷键 ^R  ^D  ^A  ^E  ^U  ^K  ^S  ^Q  
 5. 前后台作业控制 &  
@@ -28,8 +29,9 @@ Linux支持的shell
     3.  fg%1   vim妙用  ，首先是进入vim，编辑一半，ctrl+z 退出，命令行操作，fg返回vim
     4. screen 
 6. 输入输出重定向 0输入,1输出,2输出错误，>  >>   2>   2>> 2>&1   &> 混合输出，无论对错     cat <  /etc/hosts   、 cat<<EOF 、
-    1. cat > file1 <<EOF   快速输入内容到文件中去
-
+    
+1. cat > file1 <<EOF   快速输入内容到文件中去
+    
 7. 管道 |
 
     - |tee 类似重定向，好处是内容可以打印在屏幕同时输入到文件中去

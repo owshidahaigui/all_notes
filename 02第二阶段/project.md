@@ -56,29 +56,28 @@
 
 1. 配置用户名
 
-```
+```shell
 e.g. 将用户名设置为Tedu
 sudo git config --system user.name Tedu
 ```
 
 2. 配置用户邮箱
 
-```
+```shell
 e.g. 将邮箱设置为lvze@tedu.cn
 git config --global user.email lvze@tedu.cn
 ```
 
 3. 配置编译器
 
-```
+```shell
 e.g. 配置编译器为pycharm
 git config core.editor pycharm
-
 ```
 
 4. 查看配置信息
 
-```
+```shell
 git config --list
 ```
 
@@ -147,6 +146,7 @@ git commit  -m 'add files'
 8. 将暂存区或者某个commit点文件恢复到工作区
 
 > git checkout [commit] -- [file]       跟踪文件在工作区发生修改，这个命令是让工作区文件恢复到库文件一样                                              
+>
 > * --   是为了防止误操作，checkout还有切换分支的作用                                               
 
 9. 移动或者删除文件
@@ -161,7 +161,9 @@ git commit  -m 'add files'
 ------------------------------
 #### @扩展延伸
 
-在Git项目中可以通过在项目的某个文件夹下定义.gitignore文件的方式，规定相应的忽略规则，用来管理当前文件夹下的文件的Git提交行为。.gitignore                                                              文件是可以提交到公有仓库中，这就为该项目下的所有开发者都共享一套定义好的忽略规则。在.gitingore 文件中，遵循相应的语法，在每一行指定一个忽略规则。
+1) 在Git项目中可以通过在项目的某个文件夹下定义.gitignore文件的方式，规定相应的忽略规则，用来管理当前文件夹下的文件的Git提交行为。
+
+.gitignore文件是可以提交到公有仓库中，这就为该项目下的所有开发者都共享一套定义好的忽略规则。在.gitingore 文件中，遵循相应的语法，在每一行指定一个忽略规则。
 
 ```
 .gitignore忽略规则简单说明
@@ -189,6 +191,17 @@ config.php:     表示忽略当前路径的 config.php 文件
 ```
 -------------------------------
 
+2）第二种方法
+
+全局设置排除文件，这会在全局起作用，只要是Git管理的工程，在提交时都会自动排除不在控制范围内的文件或目录。这种方法对开发者来说，比较省事，只要一次全局配置，不用每次建立工程都要配置一遍过滤规则。但是这不保证其他的开发者在克隆你的代码后，他们那边的规则跟你的是一样的，这就带来了代码提交过程中的各种冲突问题。
+配置步骤如下：
+a）像方法（1）一样，也需要建立一个.gitignore文件，把要排除的文件写进去。
+
+b）但在这里，我们不规定一定要把.gitnore文件放到某个工程下面，而是任何地方，比如我们这里放到了Git默认的Home路径下，比如：/home/wangshibo/hqsb_ios
+
+c）使用命令方式可以配置全局排除文件 git config --global core.excludesfile  ~/.gitignore，你会发现在 ~/.gitconfig文件中会出现excludesfile = /home/wangshibo/hqsb_ios/.gitignore。
+
+说明Git把文件过滤规则应用到了Global的规则中。
 
 ### 版本控制（标签）
 
