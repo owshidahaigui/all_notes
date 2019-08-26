@@ -548,7 +548,8 @@ tarena@tedu:~$ ls   -ld   /aid11
 sudo chown -R ubuntu:ubuntu Travel/ #递归修改目录下的所有文件的权限
 ```
 
-
+- **umask：修改权限**
+    ![umask](linux_img/umask.png)
 
 ## 四、进程管理：
 
@@ -637,7 +638,9 @@ procs -----------memory---------- ---swap-- -----io---- -system-- ------cpu-----
 killall  -9  -u   用户名
 ```
 
-####   4.查看当前系统监听的端口：netstat  -anptu  
+####   4.查看当前系统监听的端口：
+
+​	 **netstat  -anptu  或者ss 命令**
 
 ​     -a：所有正在监听         -n：数字方式显示
 ​     -p：显示协议信息          -t：tcp协议
@@ -685,3 +688,17 @@ tarena@tarena:/usr/share$ sudo ufw disable
 - ufw allow/deny servicename:ufw从/etc/services中找到对应service的端口，进行过滤。
 - ufw allow proto tcp from 10.0.1.0/10 to 本机ip port 25:允许自10.0.1.0/10的tcp封包访问本机的25端口。
 - ufw delete allow/deny 20:删除以前定义的"允许/拒绝访问20端口"的规则
+
+## 关机重启
+
+- **centos**
+    - reboot   普通重启
+        1. shutdown -r now 立刻重启(root用户使用)
+        2. shutdown -r 10 过10分钟自动重启(root用户使用)
+        3. shutdown -r 20:35 在时间为20:35时候重启(root用户使用)
+        4. 如果是通过shutdown命令设置重启的话，可以用shutdown -c命令取消重启
+    - Linux centos关机命令：
+        1. halt 立刻关机
+        2. poweroff 立刻关机
+        3. shutdown -h now 立刻关机(root用户使用)
+        4. shutdown -h 10 10分钟后自动关机

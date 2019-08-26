@@ -1,21 +1,6 @@
 
 # 《Django 教程》
- - 讲师: 魏明择
- - 时间: 2019
 
-## 目录
-<!-- TOC depthFrom:1 depthTo:5 -->
-
-- [中间件 Middleware](#中间件-middleware)
-    - [跨站请求伪造保护 CSRF](#跨站请求伪造保护-csrf)
-- [Django中的forms模块](#django中的forms模块)
-    - [Django之form表单验证](#django之form表单验证)    
-- [分页](#分页)
-    - [Paginator对象](#paginator对象)
-    - [Page对象](#page对象)
-- [文件上传](#文件上传)
-
-<!-- /TOC -->
 
 ### 中间件 Middleware(可以用于权限设置,未登录的不能查看)
 - 中间件是 Django 请求/响应处理的钩子框架。它是一个轻量级的、低级的“插件”系统，用于全局改变 Django 的输入或输出。

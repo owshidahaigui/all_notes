@@ -461,6 +461,46 @@ ceho(){ echo dd;};ceho;
 
 ​	**注意: 双引号里面$1,$2可以传参，单引号不行，显示$1 打印$1 ,字符串传参用双引号**
 
+- 做个统计tcp状态数量的函数
+
+    ```shell
+    [tarena@localhost 桌面]$ ss -an |grep ^tcp
+    tcp    LISTEN     0      5      192.168.122.1:53                    *:*                  
+    tcp    LISTEN     0      128       *:22                    *:*                  
+    tcp    LISTEN     0      128    127.0.0.1:631                   *:*                  
+    tcp    LISTEN     0      100    127.0.0.1:25                    *:*                  
+    tcp    ESTAB      0      0      172.16.97.128:22                 172.16.97.1:54742              
+    tcp    LISTEN     0      128      :::22                   :::*                  
+    tcp    LISTEN     0      128     ::1:631                  :::*                  
+    tcp    LISTEN     0      100     ::1:25                   :::* 
+    ```
+
+    ```shell
+    [tarena@localhost 桌面]$ vim tcp_conect_status.sh
+    [tarena@localhost 桌面]$ cat ./tcp_conect_status.sh 
+    #!/usr/bin/bash
+    LISTEN(){
+    	ss -an| grep '^tcp'|grep 'LISTEN' |wc -l
+    }
+    
+    SYN_RECV(){
+    	ss -an | grep '^tcp'|grep 'SYN[_-]RECV' |wc -l
+    }
+    
+    ESTABLISTHEN(){
+    	ss -an | grep '^tcp' |grep 'ESTAB' |wc -l
+    }
+    
+    TIME_WAIT() {
+    	ss -an |grep '^tcp' |grep 'TIME[_-]WAIT' |wc -l
+    }
+    
+    $1
+    #将命令封装成函数内容，通过传递函数名，调用函数，返回内容
+    ```
+
+    
+
 ### cookie:
 
 **ping 的用法,检测是否和某ip地址能相连**
@@ -509,6 +549,15 @@ vim test.sh
 ```
 
 - **//等待所有后台子进程结束，主脚本才结束.**
+
+#### centos
+
+安装命令：yum  -y  install mariadb-server mariadb   安装数据库
+启动数据库：systemctl   start   mariadb    
+进入数据库：mysql 
+退出数据库：\q
+查看数据库数据：mysqladmin  status    #ubuntu系统同样适用
+查看数据库扩展信息：mysqladmin  extended-status	 #ubuntu系统同样适用
 
 ### 正则表达式:(模糊匹配)
 
@@ -796,3 +845,25 @@ awk '$7~/mp3$/{x++} END{print "mp3的访问量:",x}' access_log
 
 //统计mp3文件的访问次数.
 ```
+
+利用数组统计，分组统计
+
+```shell
+[tarena@localhost 桌面]$ ss -an |grep ^tcp
+tcp    LISTEN     0      5      192.168.122.1:53                    *:*                  
+tcp    LISTEN     0      128       *:22                    *:*                  
+tcp    LISTEN     0      128    127.0.0.1:631                   *:*                  
+tcp    LISTEN     0      100    127.0.0.1:25                    *:*                  
+tcp    ESTAB      0      0      172.16.97.128:22                 172.16.97.1:54742              
+tcp    LISTEN     0      128      :::22                   :::*                  
+tcp    LISTEN     0      128     ::1:631                  :::*                  
+tcp    LISTEN     0      100     ::1:25                   :::* 
+```
+
+```shell
+[tarena@localhost 桌面]$ ss -an | grep ^tcp |awk '{tcp_connect_status[$2]++} END{for (i in tcp_connect_status) {print i,tcp_connect_status[i]}}'
+LISTEN 7
+ESTAB 1
+#统计第二列的每种值出现的次数，使用数组，将每种值作为键，每次出现加1.for循环打印数组键，值
+```
+

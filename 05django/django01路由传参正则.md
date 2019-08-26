@@ -1,39 +1,5 @@
 # 《Django Web框架》
 
-```
-主讲: 魏明择
-版权: tedu.cn
-时间: 2019
-```
-- 2019年3月最新更新的内容
-- 此课程很重要
-
-## 目录
-<!-- TOC depthFrom:3 depthTo:5 -->
-
-- [Django框架的介绍](#django框架的介绍)
-    - [Django的安装](#django的安装)
-- [Django框架开发](#django框架开发)
-    - [创建项目的指令](#创建项目的指令)
-    - [Django项目的目录结构](#django项目的目录结构)
-- [HTTP协议](#http协议)
-    - [HTTP协议的请求和响应](#http协议的请求和响应)
-    - [请求request 和 响应 response](#请求request-和-响应-response)
-    - [URL 介绍](#url-介绍)
-    - [路由](#路由)
-    - [Django 中的 URL路由配置](#django-中的-url路由配置)
-- [视图view](#视图view)
-    - [url和带有参数的视图函数](#url和带有参数的视图函数)
-    - [url 正则表达式命名分组(?p<name>xxx) 和 带有参数的视图函数](#url-正则表达式命名分组pnamexxx-和-带有参数的视图函数)
-- [请求和响应](#请求和响应)
-    - [HTTP 请求](#http-请求)
-    - [HTTP 响应](#http-响应)
-    - [GET方式传参](#get方式传参)
-        - [GET方式传参参数获取(查询字符串 Query String)](#get方式传参参数获取查询字符串-query-string)
-    - [POST传递参数的获取](#post传递参数的获取)
-
-<!-- /TOC -->
-
 
 ## day01
 
@@ -99,6 +65,7 @@
         - 安装离线包
           - $ pip install Django-1.11.8.whl
 - Django的卸载
+    
     - $ pip uninstall django
 
 
@@ -106,6 +73,7 @@
 #### 创建项目的指令
   - $ django-admin startproject 项目名称
   - 如:
+    
     - $ django-admin startproject mywebsite1
   - 运行
     ```py
@@ -343,7 +311,7 @@
 - HTTP1.1新增了五种请求方法：OPTIONS, PUT, DELETE, TRACE 和 CONNECT 方法。
 - HTTP1.1 请求详述
     序号 | 方法| 描述
-    |:-:|:-:|:-|
+    |:--:|:--:|:-|
     1 | GET | 请求指定的页面信息，并返回实体主体。
     2 | HEAD | 类似于get请求，只不过返回的响应中没有具体的内容，用于获取报头
     3 | POST | 向指定资源提交数据进行处理请求（例如提交表单或者上传文件）。数据被包含在请求体中。POST请求可能会导致新的资源的建立和/或已有资源的修改。
@@ -377,6 +345,7 @@
         - request.META : 请求中的元数据(消息头)
             - request.META['REMOTE_ADDR']  : 客户端IP地址
             - request.META['HTTP_REFERER'] : 请求源地址
+            - request.META[]'HTTP_AUTHORIZATION']：token的位置
 - 请求示例
 ```py
 # file : urls.py
@@ -460,6 +429,7 @@ def show_info(request):
 
 ##### GET方式传参参数获取(查询字符串 Query String)
 - 客户端传递参数给服务器端
+    
     - URL 格式: `网址?参数名1=值1&参数名2=值2...`
 - 服务器端接收参数
     1. 判断 request.method 的值判断请求方式是否是get请求
@@ -529,4 +499,4 @@ def show_info(request):
 
         ```
 
-                            
+        ​                    

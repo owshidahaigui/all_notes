@@ -32,7 +32,7 @@
 	【3】 操作系统调配计算机资源，确定进程状态等         
 	【4】 操作系统将创建的进程提供给用户使用 
 
-![](/home/tarena/桌面/test/month2北京老师/并发concurrent/img/linux.png)
+![](img/linux.png)
 		
 3. 进程基本概念
 
