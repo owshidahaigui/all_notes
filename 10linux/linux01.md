@@ -133,7 +133,13 @@ Linux发行版本
 
 uname  -r :查看Linux内核版本
 
-cat    /etc/lsb-release ：查看系统的版本
+/etc/sudoers ：root    ALL=(ALL)       ALL  这一行在这一行的下面添加上your_username    ALL=(ALL)       ALL
+						这个用户就可以使用sudo了
+
+cat    /etc/lsb-release ：查看系统ubuntu的版本 ,
+
+cat /etc/redhat-release :查看Centos的版本
+
 hostname  ：查看主机名
 
 ```shell
@@ -410,6 +416,7 @@ tarena@aid:~$ sudo  du  -sh   /
 ```
 
 /proc : 不占用硬盘的空间，反应内存数据的目录
+free :查看内存使用
 
    挂载点(访问点)：访问设备内容的入口
    挂载：mount  设备路径   挂载点目录
@@ -427,7 +434,11 @@ tarena@aid:/$ ls /mypart/
 
 tarena@aid:/$ sudo umount  /mypart    #卸载挂载点的设备
 tarena@aid:/$ ls /mypart/
+
+tarena@tarena:~/桌面$ less /proc/meminfo  #查看内存信息比free -m 详细
 ```
+
+cookie：内存脏页，dirty属性。内存内部实际使用情况
 
 df    -h：显示所有正在挂载使用设备的使用情况
 
@@ -457,7 +468,7 @@ tarena@aid:/$ pwd
 tarena@aid:/$ alias                         #查看当前系统所有生效的别名
 ```
 
-## 八、常见通配符使用   *   ？    []     {}
+## 八、常见通配符使用   *   ？    []     {}  ()  \
 
 /etc/：大多数配置文件所在的目录
 
@@ -475,8 +486,8 @@ tarena@aid:/$ ls   /dev/tty？？
 tarena@aid:/$ ls   /dev/tty？？？
 ```
 
-​     []：匹配连续范围
-​     {}：匹配多种不同的情况
+​     []：匹配连续范围中的一个字符
+​     {}：集合，匹配多种不同的情况,
 
 ```shell
 tarena@aid:/$ ls    /dev/tty[0-9]
@@ -489,6 +500,33 @@ tarena@aid:/$ ls   /dev/tty{1,3,5,7,9,S0}
 tarena@aid:/$ ls    /dev/tty1[0-9]       /dev/tty20
 tarena@aid:/$ ls    /dev/tty{1[0-9],20}
 ```
+
+​	():子shell ，括号中的命令是以子进程中执行，不会影响当前shell的环境
+​	\：转义符，让元字符回归本意
+
+```shell
+[tarena@localhost 桌面]$ echo *
+a l7ve live loove love
+[tarena@localhost 桌面]$ echo \*
+*
+[tarena@localhost 桌面]$ echo \ *  #对空格转义，空格一般是用来做分隔符，现在是空格，没有分隔意义
+ *
+[tarena@localhost 桌面]$ echo \  *
+  a l7ve live loove love
+```
+
+- 转义符：其他用法
+
+    ```shell
+    [tarena@localhost 桌面]$ echo \ 
+    > 						#转义 换行符，原本打enter键执行命令现在变换行
+    
+    [tarena@localhost 桌面]$ mkidr \\   #取消\的转义
+    [tarena@localhost 桌面]$ echo -e "a\tb"    #\t表示tab键，取消转义加2个\\  ，注意是echo -e
+    a	b
+    ```
+
+    
 
 ## 九、常见命令与选项的使用
 
@@ -621,7 +659,21 @@ PATH:
 方式3：永久性的设置，只针对一个用户，需要重启生效或者使用source命令，优先级高于2
 		将方式1的导出操作添加到文件~/.bashrc的末尾
 
+echo：打印输出到终端
+	-e ：字符串内容转义
 
+```shell
+[tarena@localhost 桌面]$ echo -e "a\tb"    #\t表示tab键，取消转义加2个\\  ，注意是echo -e
+a	b[tarena@localhost 桌面]$ echo -e "\e[1;31mThis is a red text" #第一个[1表示使用颜色
+This is a red text
+[tarena@localhost 桌面]$ la	#所有的命令行都会变色
+bash: la: 未找到命令...
+[tarena@localhost 桌面]$ echo -e "\e[0;30mThis is a red text"#输入0，才可以
+[tarena@localhost 桌面]$ echo -e "\e[1;31mThis is a red text.\e[0m"
+This is a red text.#这样就是打印行，变色。
+```
+
+printf：格式化输出
 
 ## 十、命令行技巧
 
