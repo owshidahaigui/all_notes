@@ -882,6 +882,20 @@ r.lset('pylist',0,'spiderman')
 r.delete('pylist')
 ```
 
+- **python-redies连接的推荐方式**
+    一般连接从redis中取出的数据都是byte类型，可以在实例化过程中给一个叫decode_response，默认为False，可以设置为True,避免了转码流程。
+
+    ```shell
+    from redis import ConnectionPool, Redis
+    pool = ConnectionPool(host='localhost', port=6379, db=0, decode_responses=True)
+    rdb = Redis(connection_pool=pool)
+    rdb.set('name2', 'rooter')
+    name2 = rdb.get('name2')
+    print(name2)
+    ```
+
+    注意：上面的连接方式是建立连接池
+
 **位图操作bitmap（重要）**
 
 位图不是真正的数据类型，它是定义在字符串类型中
