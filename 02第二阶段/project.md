@@ -108,7 +108,9 @@ git add  *
 
 4. 取消文件跟踪记录
 
->  git rm --cached [file] 
+>  git rm --cached [file]      
+>
+>  git rm -r --cache <文件>... 取消缓存，文件夹   -r  表示递归
 
 5. 将文件同步到本地仓库
 
@@ -130,11 +132,11 @@ git commit  -m 'add files'
 
 > git log    查看日志时，使用q退出日志，返回命令行
 >
-> git -p 日志中显示每次提交的内容差异，
+> git log -p 日志中显示每次提交的内容差异，
 >
-> git -num  查看最近num条日志      
+> git  log -num  查看最近num条日志      
 >
-> git --stat 日志带有修改文件数量                                                                              
+> git   log --stat 日志带有修改文件数量                                                                              
 > git log --pretty=oneline
 
 7. 比较工作区文件和仓库文件差异
