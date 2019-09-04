@@ -427,11 +427,11 @@ pymysql.install_as_MySQLdb()
 
 - 通过 MyModel.objects 管理器方法调用查询接口
 
-  | 方法     | 说明                              |
-  | -------- | --------------------------------- |
-  | all()    | 查询全部记录,返回QuerySet查询对象 |
-  | get()    | 查询符合条件的单一记录            |
-  | filter() | 查询符合条件的多条记录            |
+  | 方法     | 说明                                  |
+  | -------- | ------------------------------------- |
+  | all()    | 查询全部记录,返回QuerySet查询对象集合 |
+  | get()    | 查询符合条件的单一记录                |
+  | filter() | 查询符合条件的多条记录                |
 
 all()方法
 
@@ -600,6 +600,7 @@ except:
       
       with connection.cursor() as cur:
           # 删除 id为1的一条记录
+          
           cur.execute('delete from bookstore_book where id=10;')
       ```
 
