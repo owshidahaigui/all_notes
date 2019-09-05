@@ -290,6 +290,8 @@ django-cors-headers官网 https://pypi.org/project/django-cors-headers/
 
 ## 4.1，什么是RESTful
 
+在设计web接口的时候，REST主要是用于定义接口名，接口名一般是用名次写，不用动词,就是用URL定位资源，用HTTP描述操作。
+
 ​	1，资源 **（Resources）**
 
 ​		**网络上的一个实体，或者说是网络上的一个具体信息**，并且每个资源都有一个独一无二得URI与之对应；获取资源-直接访问URI即可
