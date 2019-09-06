@@ -1,68 +1,9 @@
-# **redis_day01回顾**
-
 ## **Redis的特点**
 
 ```python
 1、基于key-value的非关系型数据库
 2、基于内存存储，速度很快
 3、基于内存存储，经常当作缓存型数据库使用，常用信息存储在热地是数据库中
-```
-
-## **五大数据类型**
-
-```python
-1、字符串类型（string）
-2、列表类型（list）
-3、哈希类型（hash）
-4、集合类型（set）
-5、有序集合类型（sorted set）
-```
-
-### **字符串类型**
-
-```python
-# 设置key相关操作
-1、set key value
-2、setnx key value
-3、mset k1 v1 k2 v2 k3 v3
-4、set key value ex seconds
-5、set key value
-5、expire key 5
-5、pexpire key 5
-5、ttl key
-5、persist key
-# 获取key相关操作
-6、get key
-7、mget k1 k2 k3
-8、strlen key 
-# 数字相关操作
-7、incrby key 步长
-8、decrby key 步长
-9、incr key
-10、decr key
-11、incrbyfloat key number
-```
-
-### **列表类型**
-
-```python
-# 插入元素相关操作
-1、LPUSH key value1 value2 
-2、RPUSH key value1 value2
-3、RPOPLPUSH source destination
-4、LINSERT key after|before value newvalue
-# 查询相关操作
-5、LRANGE key start stop
-6、LLEN key
-# 删除相关操作
-7、LPOP key
-8、RPOP key
-9、BLPOP key timeout
-10、BRPOP key timeout
-11、LREM key count value
-12、LTRIM key start stop
-# 修改指定元素相关操作
-13、LSET key index newvalue
 ```
 
 **思考：**
@@ -846,9 +787,16 @@ zremrangebyscore key min max
 
 - **交集**
 
-  ZINTERSTORE destination numkeys key1 key2 WEIGHTS weight AGGREGATE SUM|MIN|MAX
+  **ZINTERSTORE destination numkeys key1 key2 WEIGHTS weight AGGREGATE SUM|MIN|MAX**
 
   和并集类似，只取相同的元素
+  
+  ```python
+  # 交集（weights代表权重值，aggregate代表聚合方式 - 先计算权重值，然后再聚合）
+  ZINTERSTORE destination numkeys key1 key2 WEIGHTS weight AGGREGATE SUM|MIN|MAX
+  # 并集（weights代表权重值，aggregate代表聚合方式 - 先计算权重值，然后再聚合）
+  ZUNIONSTORE destination numkeys key [weights 权重值] [AGGREGATE SUM|MIN|MAX]
+  ```
 
 **python操作sorted set**
 
@@ -935,6 +883,34 @@ ZUNIONSTORE mobile-001:003 mobile-001 mobile-002 mobile-003 # 可否？
 2、ZUNIONSTORE mobile-001:003 mobile-001 mobile-002 mobile-003 AGGREGATE MAX
 ```
 
+```python
+# 应用场景
+1、各种排行榜
+   1、游戏：列出前100名高分选手
+   2、列出某用户当前的全球排名
+   3、各种日排行榜、周排行榜、月排行榜
+# 常用命令
+zadd key score member
+
+ZRANGE key start stop [withscores]
+ZREVRANGE key start stop [withscores]
+ZRANGEBYSCORE key min max [withscores] [limit offset count]
+ZSCORE key member
+ZCOUNT key min max
+ZCARD key
+
+ZRANK key member
+ZREVRANK key member
+
+ZINCRBY key increment member
+
+ZREM key member
+ZREMRANGEBYSCORE key min max
+
+zunionstore destination numkeys key [weights 权重值] [AGGREGATE SUM|MIN|MAX]
+ZINTERSTORE destination numkeys key1 key2 WEIGHTS weight AGGREGATE SUM|MIN|MAX
+```
+
 **python代码实现**
 
 ```python
@@ -972,21 +948,88 @@ for r in rlist:
     print('第{}名：{}'.format(i,r[0].decode()) )
 ```
 
+## scan命令
+
+- **了解一下keys命令**
+    - **keys pattern**：Redis提供了一个简单粗暴的keys命令来列出所有满足特定正则字符串规则的key- 
+
+- **虽然keys命令非常的简单，并且带有两个明显的缺点：**
+    - **不支持offset, limit功能，既没有分批查询的功能**
+        如果在海量数据的Redis实例中，如果满足条件的查询有上百万，千万的key，那么该查询操作会非常的耗时。
+    - **keys命令是线性遍历，时间复杂度是O(n)**
+        如果符合条件的数据过多，鉴于Redis的单线程模型，该命令会严重阻塞其他客户端在该Redis实例的命令操作。所以keys不适合在生产环境中使用。
+
+#### 为什么要使用scan代替keys
+
+****
+
+- 虽然scan复杂度也是O(n) ， 但是我的原理是游标分步遍历，提供分批的功能，一次只查一部分。不会对线程造成严重阻塞。
+- 提供了count的参数，类似于limit功能，可以限制一次最多返回的近似最大值
+
+![scan](img/scan.png)
+
+scan最重要的特性就是可以分批操作，不会一个命令执行很长时间，从而导致阻塞线程。虽然scan有如此多的好处，但是它的操作相对keys而言更为复杂，而且也有几个缺点需要注意
+
+- 返回的结果可能会有重复，需要用户自己去重
+- 遍历的过程，如果有数据改动，改动后的数据是否能够查到是不能确定的
+
+**Scan命令**
+
+**Redis的四种基本容器类型中，只有hash,set,zset支持scan操作，list没有scan操作**
+
+针对所有Redis的外部键
+
+- scan
+
+针对Redis容器类型的键
+
+- hscan：哈希类型
+- sscan：集合类型
+- zscan：有序集合
+
+**scan基本使用**
+
+- 命令行
+
+    ```shell
+    scan cursor [MATCH pattern] [COUNT count]  
+    ```
+
+    - cursor就是游标，第一次查询，游标默认为0。只有当scan返回的游标再次为0，才代表本次整体遍历结束
+    - pattren就是字符串匹配规则
+    - count就是近视的最大要返回的元素个数，并不严苛，但是大致会在count的范围浮动
+
+**如何使用**
+
+- 一般我们可以在代码上封装好分批查询，既要多次调用scan命令，每次都将上次scan返回的游标结果作为下次scan的游标参数。
+- 第一次scan的游标默认为0，在整体的遍历中，只有当之后的某次scan返回的游标结果再次为0，这代表本次整体循环结束。
+
+```shel
+127.0.0.1:6379> scan 0 match * count 10
+1) "0"
+2) 1) "ok"
+   2) "name2"
+```
+
+**scan特性**
+
+- 单次返回的结果，如果为空，不代表就遍历结束了。只有其返回的游标是空，才代表此次遍历结束
+- 可能会返回重复的结果
+- 每次遍历的数据个数，或多或少，但最大个数肯定在count参数的附近，除非哈希冲突的个数太多了。
+
+**scan的遍历原理**
+
+在Redis中所有的key都存储在一个很大的字典中，这个字典的结构和Java的HashMap一样。通过一维数组来存储数据，哈希冲突的数据使用链地址法来解决
+
+![scan2](img/scan2.png)
+
+**而scan指令是怎么遍历这个数组和链表的呢？**
+
+- scan中的`cursor游标`实际代表的就是数组的位置索引，Redis将这个位置索引称之为槽(slot)。在不考虑字典扩容的情况下。scan就是按照数组的下标，一个一个遍历槽的。而scan返回游标就是代表此时遍历到数组的这个位置，如要下次遍历，就从这里开始。
+- `count`并不是要遍历的元素个数，而是一次scan，要遍历的槽的个数，既遍历数组的长度是多少。
+- 之所以有时候返回的数据多，有的时候数据少，甚至有的时候，数据为空。这是因为并不是数组的每个槽都存放有数据的。如果有多个冲突数据，这会存在这个槽的链表中。
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+- **参考网站**<https://blog.csdn.net/SnailMann/article/details/97615456>
 

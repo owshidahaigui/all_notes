@@ -128,18 +128,13 @@ mysql -hIP地址 -p3306 -u用户名 -p密码
     data time year datetime timestamp 
 ```
 
-
-
 **日期时间函数** 
 
 ```mysql
     NOW() CURDATE() YEAR(字段名) DATE(字段名) TIME(字段名)
 ```
 
-
-
 **日期时间运算**
-	
 
 ```mysql
     select * from 表名 where 字段名 运算符(now()-interval 时间间隔单位)
@@ -163,8 +158,6 @@ eg2 : 删除成绩不及格的学生
 eg3 : 把id为3的学生的姓名改为 周芷若
     update stu set name='周直落' where id=3;
 ```
-
-
 
 - **逻辑比较** 
 
@@ -193,8 +186,6 @@ where 字段名 like '%%__' 表达式(% _) %表示任意数量任意字符，_�
 eg1 : 查询北京的姓赵的学生信息
     select * from stu where address='北京' and name like '赵%';冒号
 ```
-
-
 
 
 - **NULL判断**
@@ -229,7 +220,7 @@ limit m,n ：从第(m+1)条记录开始，显示n条,默认从0开始
 ```
 
 ******************************************************************************************
-# MySQL高级-Day01
+# Day01
 
 ## **MySQL基础巩固**
 
@@ -842,7 +833,7 @@ SQL命令运行时间监测
   **删除**
   		drop index 索引名 on 表名; (只能一个一个删)
 
-# MySQL高级-Day02笔记
+# Day02笔记
 
 ## **数据导入**
 
@@ -982,74 +973,6 @@ create table 表名 select 查询命令 where false;
 表级锁 ：myisam  
 行级锁 ：innodb
 
-## **存储引擎**
-
-**基本操作**
-
-```mysql
-1、查看所有存储引擎
-2、查看已有表的存储引擎
-3、创建表时指定存储引擎
-4、已有表指定存储引擎
-```
-
-**常用存储引擎特点**
-
-InnoDB特点
-			
-
-```mysql
-1、支持行级锁
-2、支持外键、事务操作
-3、表字段和索引同存储在一个文件中
-```
-
-MyISAM特点
-
-```mysql
-1、支持表级锁
-2、表字段和索引分开存储
-```
-
-**如何决定使用哪个存储引擎**
-
-```
-1、执行查操作多的表用 MyISAM
-2、执行写操作多的表用 InnoDB
-```
-
-## **MySQL的用户账户管理**
-
-**开启MySQL远程连接**
-
-```mysql
-
-```
-
-**添加授权用户**
-
-```mysql
-1、用root用户登录mysql
-	mysql -uroot -p123456
-2、授权
-	grant 权限列表 on 库.表 to "用户名"@"%" identified by "密码" with grant option;
-```
-
-**权限列表**
-
-all privileges 、select 、insert ... ... 
-
-库.表 ： * . * 代表所有库的所有表
-
-**示例**
-
-```mysql
-1、添加授权用户tiger,密码123,对所有库的所有表有所有权限
-2、添加用户rabbit,对db2库有所有权限
-```
-
-
-
 # MySQL-Day02必须掌握**
 
 ## **外键**
@@ -1166,7 +1089,7 @@ mysql> source /home/tarena/xxx.sql
 4、外键		 ：让当前表字段的值在另一张表的范围内选择
 ```
 
-# **MySQL-Day03笔记**
+# **Day03笔记**
 
 ## 3大范式
 
@@ -1266,7 +1189,7 @@ vi使用 : 按a ->编辑文件 ->ESC ->shift+: ->wq
 
 **权限列表**
 
-```
+```shell
 all privileges 、select 、insert ... ... 
 库.表 ： *.* 代表所有库的所有表
 ```

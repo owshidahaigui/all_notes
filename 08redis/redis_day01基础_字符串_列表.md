@@ -37,7 +37,7 @@
 
 - 数据库排名
 
-![1562644117146](E:\工作相关\讲课文件\Redis\redis_day01_note\db_rank.png)
+![1562644117146](img/db_rank.png)
 
 
 
