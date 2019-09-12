@@ -1,0 +1,12 @@
+def funca(A):
+pass
+def funcb(B):
+pass
+def funcc(C):
+pass
+def funcd(D):
+pass
+a, b, c, d = 1, 2, 3, 4
+funcdict = {a:funca, b:funcb, c:funcc, d:funcd} 
+	字典里只是存放方法名		   字典里只要写方法名。不用写括号
+funcdict[a] (A) #== funca(A)			调用时键值后面括号传入参数
